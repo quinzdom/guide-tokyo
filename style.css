@@ -10,8 +10,9 @@
   --color-surface: #ffffff;
   --color-text: #2c2c2c;
   --color-text-muted: #7a7a6e;
-  --color-accent: #ab2439;
-  --color-accent-light: #e0b3b6;
+  --color-accent: #c27544;
+  --color-accent-light: #f8b6ba;
+  --color-accent-warm: #f3a257;
   --color-border: #e8e6e1;
   --color-hero-bg: #2c2c2c;
   --color-hero-text: #faf9f6;
@@ -184,27 +185,27 @@ p {
 .hero {
   background: var(--color-hero-bg);
   color: var(--color-hero-text);
-  padding: var(--space-xl) 0;
+  padding: var(--space-sm) 0;
   text-align: center;
 }
 
 .hero h1 {
-  font-size: clamp(2.5rem, 6vw, 4rem);
-  margin-bottom: var(--space-sm);
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  margin-bottom: var(--space-xs);
   letter-spacing: -0.01em;
 }
 
 .hero h1 em {
   font-style: italic;
-  color: var(--color-accent);
+  color: var(--color-accent-warm);
 }
 
 .hero-subtitle {
-  font-size: 1.1rem;
+  font-size: 0.9rem;
   color: rgba(250, 249, 246, 0.65);
   max-width: 500px;
-  margin: 0 auto var(--space-md);
-  line-height: 1.8;
+  margin: 0 auto;
+  line-height: 1.6;
 }
 
 .hero-cta {
