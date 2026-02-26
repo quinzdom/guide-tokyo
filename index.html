@@ -36,7 +36,7 @@
     <div class="section">
       <section class="intro-essay" id="intro">
         <p class="section-label">Introduction</p>
-        <pre class="intro-raw">The true city of Tokyo is generally seen as being the twenty three special wards of Tokyo where 9.7 million people live (2025) while another 2.5 million people commute in every weekday from the extensive suburbs.
+        <pre class="intro-raw" id="introRawText">The true city of Tokyo is generally seen as being the twenty three special wards of Tokyo where 9.7 million people live (2025) while another 2.5 million people commute in every weekday from the extensive suburbs.
 This book will primarily focus on these 23 wards because of the outsized importance of this city. I will generally refer to the 23 wards as, simply, Tokyo.
 Population
 According to the United Nations World Urbanization Prospects 2025 report, the metropolitan area of Tokyo has a population of 33 million, making Tokyo the third largest city in the world behind Jakarta, Indonesia (41 million) and Dhaka, Bangladesh (36 million). After decades as the world’s largest city, Tokyo has not been number one since around 2018.
@@ -129,6 +129,7 @@ Kanda
 Akihabara
 Nishi-Nippori
 Sugamo</pre>
+        <div class="intro-formatted" id="introFormattedText"></div>
       </section>
 
       <!-- Filters -->
@@ -376,6 +377,192 @@ Sugamo</pre>
     </div>
     <div id="tokyo-map"></div>
   </section>
+
+  <script>
+    (function () {
+      const intro = document.getElementById('intro');
+      const rawEl = document.getElementById('introRawText');
+      const target = document.getElementById('introFormattedText');
+      if (!intro || !rawEl || !target) return;
+
+      const lines = rawEl.textContent.replace(/\r/g, '').split('\n').map((line) => line.trim());
+      const findExact = (value, fromIndex = 0) => lines.findIndex((line, index) => index >= fromIndex && line === value);
+      const findPrefix = (value, fromIndex = 0) => lines.findIndex((line, index) => index >= fromIndex && line.startsWith(value));
+      const nonEmpty = (start, end) => lines.slice(start, end).filter(Boolean);
+
+      const idxPopulation = findExact('Population');
+      const idxComparison = findExact('Comparison with New York City', idxPopulation + 1);
+      const idxTableStart = findExact('Tokyo (23 wards)', idxComparison + 1);
+      const idxWhere = findExact('Where is central Tokyo?', idxTableStart + 1);
+      const idxFirstTierCore = findExact('First tier core areas', idxWhere + 1);
+      const idxSecondTierCore = findExact('Second tier core areas', idxFirstTierCore + 1);
+      const idxVeryQuickly = findExact('Very quickly, here are the main characteristics of each area.', idxSecondTierCore + 1);
+      const idxBecause = findPrefix('Because of the size and particular composition of Tokyo', idxVeryQuickly + 1);
+      const idxNow = findPrefix('Now that I have briefly covered', idxBecause + 1);
+      const idxRestaurant = findExact('Restaurant', idxNow + 1);
+      const idxNeighborhoods = findExact('Here are some of the particularly interesting neighborhoods on the Yamanote line', idxRestaurant + 1);
+
+      const required = [
+        idxPopulation,
+        idxComparison,
+        idxTableStart,
+        idxWhere,
+        idxFirstTierCore,
+        idxSecondTierCore,
+        idxVeryQuickly,
+        idxBecause,
+        idxNow,
+        idxRestaurant,
+        idxNeighborhoods
+      ];
+      if (required.some((index) => index < 0)) return;
+
+      const create = (tag, className, text) => {
+        const element = document.createElement(tag);
+        if (className) element.className = className;
+        if (typeof text === 'string') element.textContent = text;
+        return element;
+      };
+
+      const createPanel = (title, extraClass) => {
+        const panel = create('section', `intro-panel ${extraClass || ''}`.trim());
+        if (title) panel.appendChild(create('h3', 'intro-panel-title', title));
+        target.appendChild(panel);
+        return panel;
+      };
+
+      const appendParagraphs = (container, textLines) => {
+        textLines.forEach((text) => container.appendChild(create('p', '', text)));
+      };
+
+      const leadPanel = createPanel('', 'intro-panel-lead');
+      appendParagraphs(leadPanel, nonEmpty(0, idxPopulation));
+
+      const populationPanel = createPanel(lines[idxPopulation], '');
+      appendParagraphs(populationPanel, nonEmpty(idxPopulation + 1, idxComparison));
+
+      const comparisonPanel = createPanel(lines[idxComparison], '');
+      appendParagraphs(comparisonPanel, nonEmpty(idxComparison + 1, idxTableStart));
+
+      const tableData = nonEmpty(idxTableStart, idxWhere);
+      if (tableData.length >= 11) {
+        const tableWrap = create('div', 'intro-compare-table-wrap', '');
+        const table = create('table', 'intro-compare-table', '');
+        const thead = create('thead', '', '');
+        const headerRow = create('tr', '', '');
+        headerRow.appendChild(create('th', '', ''));
+        headerRow.appendChild(create('th', '', tableData[0]));
+        headerRow.appendChild(create('th', '', tableData[1]));
+        thead.appendChild(headerRow);
+        table.appendChild(thead);
+
+        const tbody = create('tbody', '', '');
+        for (let index = 2; index < tableData.length; index += 3) {
+          const row = create('tr', '', '');
+          row.appendChild(create('td', '', tableData[index] || ''));
+          row.appendChild(create('td', '', tableData[index + 1] || ''));
+          row.appendChild(create('td', '', tableData[index + 2] || ''));
+          tbody.appendChild(row);
+        }
+        table.appendChild(tbody);
+        tableWrap.appendChild(table);
+        comparisonPanel.appendChild(tableWrap);
+      }
+
+      const centralPanel = createPanel(lines[idxWhere], '');
+      nonEmpty(idxWhere + 1, idxFirstTierCore).forEach((line) => {
+        if (line === 'Train stations and the core areas of Tokyo.') {
+          centralPanel.appendChild(create('h4', 'intro-subtitle', line));
+        } else {
+          centralPanel.appendChild(create('p', '', line));
+        }
+      });
+
+      const corePanel = createPanel('', '');
+      const firstTierLines = nonEmpty(idxFirstTierCore + 1, idxSecondTierCore);
+      const secondTierLines = nonEmpty(idxSecondTierCore + 1, idxVeryQuickly);
+      const noteLine = 'I have also specified a second tier of core areas';
+      const firstTierAreas = firstTierLines.filter((line) => line !== noteLine);
+      const coreGrid = create('div', 'intro-tier-grid', '');
+
+      const firstCard = create('div', 'intro-tier-card', '');
+      firstCard.appendChild(create('h4', '', lines[idxFirstTierCore]));
+      const firstList = create('ul', 'intro-tier-list', '');
+      firstTierAreas.forEach((line) => {
+        firstList.appendChild(create('li', '', line));
+      });
+      firstCard.appendChild(firstList);
+      coreGrid.appendChild(firstCard);
+
+      const secondCard = create('div', 'intro-tier-card', '');
+      secondCard.appendChild(create('h4', '', lines[idxSecondTierCore]));
+      const secondList = create('ul', 'intro-tier-list', '');
+      secondTierLines.forEach((line) => {
+        secondList.appendChild(create('li', '', line));
+      });
+      secondCard.appendChild(secondList);
+      coreGrid.appendChild(secondCard);
+
+      corePanel.appendChild(coreGrid);
+      if (firstTierLines.includes(noteLine)) corePanel.appendChild(create('p', '', noteLine));
+
+      const characteristicsPanel = createPanel(lines[idxVeryQuickly], '');
+      const characteristicLines = nonEmpty(idxVeryQuickly + 1, idxBecause);
+      const tierOrder = ['First tier', 'Second tier'];
+      const areasByTier = { 'First tier': [], 'Second tier': [] };
+      let currentTier = '';
+      let currentArea = null;
+
+      characteristicLines.forEach((line) => {
+        if (tierOrder.includes(line)) {
+          currentTier = line;
+          currentArea = null;
+          return;
+        }
+        if (line.startsWith('- ')) {
+          if (currentArea) currentArea.bullets.push(line);
+          return;
+        }
+        if (!currentTier) return;
+        currentArea = { name: line, bullets: [] };
+        areasByTier[currentTier].push(currentArea);
+      });
+
+      const characteristicGrid = create('div', 'intro-character-grid', '');
+      tierOrder.forEach((tierName) => {
+        if (!areasByTier[tierName].length) return;
+        const tierCard = create('div', 'intro-character-tier', '');
+        tierCard.appendChild(create('h4', '', tierName));
+        areasByTier[tierName].forEach((area) => {
+          const areaCard = create('article', 'intro-area-card', '');
+          areaCard.appendChild(create('p', 'intro-area-name', area.name));
+          const bulletList = create('ul', 'intro-bullet-list', '');
+          area.bullets.forEach((bullet) => {
+            bulletList.appendChild(create('li', '', bullet));
+          });
+          areaCard.appendChild(bulletList);
+          tierCard.appendChild(areaCard);
+        });
+        characteristicGrid.appendChild(tierCard);
+      });
+      characteristicsPanel.appendChild(characteristicGrid);
+
+      const transitionPanel = createPanel('', '');
+      appendParagraphs(transitionPanel, nonEmpty(idxBecause, idxRestaurant));
+
+      const yamanotePanel = createPanel(lines[idxRestaurant], '');
+      appendParagraphs(yamanotePanel, nonEmpty(idxRestaurant + 1, idxNeighborhoods));
+      yamanotePanel.appendChild(create('h4', 'intro-subtitle', lines[idxNeighborhoods]));
+
+      const stationList = create('div', 'station-list', '');
+      nonEmpty(idxNeighborhoods + 1, lines.length).forEach((station) => {
+        stationList.appendChild(create('span', 'station-chip', station));
+      });
+      yamanotePanel.appendChild(stationList);
+
+      intro.classList.add('is-enhanced');
+    })();
+  </script>
 
   <script>
     document.getElementById('navToggle').addEventListener('click', function() {
