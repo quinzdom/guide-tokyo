@@ -178,6 +178,25 @@
       color: var(--color-text-muted);
       max-width: none;
     }
+    .itinerary-card {
+      overflow: hidden;
+      padding: 0;
+    }
+    .itinerary-photo {
+      width: 100%;
+      height: 210px;
+      object-fit: cover;
+      border-bottom: 1px solid var(--color-border);
+      display: block;
+    }
+    .itinerary-body {
+      padding: var(--space-md);
+    }
+    .itinerary-meta {
+      font-size: 0.8rem;
+      color: var(--color-text-muted);
+      margin-bottom: var(--space-xs);
+    }
 
     /* Getting around */
     .route-card {
@@ -470,16 +489,6 @@
           <p>A historic merchant district with a shrine at its center and an izakaya street that gets progressively louder as the night goes on. Great place for your first proper Japanese bar experience — just order by pointing and say "hitotsu" (one) when you want something. Works every time.</p>
         </div>
         <div class="place-card">
-          <p class="distance">~25 min by transit</p>
-          <h3>Asakusa</h3>
-          <p>Senso-ji temple, Nakamise shopping street, and what Tokyo looked like before it decided to become the future. Touristy, yes, but correctly so. Go early morning to actually see the temple without a crowd. At 8am it is serene. At noon it is Disneyland. Your choice.</p>
-        </div>
-        <div class="place-card">
-          <p class="distance">~15 min walk north</p>
-          <h3>Edo-Tokyo Museum</h3>
-          <p>A massive museum documenting Tokyo's transformation from feudal Edo to the city you're currently lost in. Worth a few hours. The scale models of old Tokyo are genuinely impressive. Located next to Ryogoku, so combine with chanko nabe and make a day of it.</p>
-        </div>
-        <div class="place-card">
           <p class="distance">~5 min walk</p>
           <h3>Sumida Riverside</h3>
           <p>Walk east and you'll hit the Sumida River. The riverside paths are great for evening walks — nice views of the Skytree tower lit up against the sky, quiet enough that you can actually think, and a useful reminder that Tokyo has more than just neon and crowds.</p>
@@ -507,24 +516,52 @@
           <p>The Kiyosumi-Shirakawa area is where Tokyo's serious coffee culture lives. Omotesando Coffee and Fuglen Tokyo (originally from Oslo, which is fine) have outposts nearby. The coffee is excellent and the rooms are usually very quiet, which may feel unsettling if you're used to Starbucks. Lean into it.</p>
         </div>
         <div class="place-card">
-          <p class="distance">Everywhere, seriously</p>
-          <h3>Convenience Store Food</h3>
-          <p>Before you dismiss this: a 7-Eleven onigiri (rice ball) in Japan costs about ¥150 and is perfect. The egg salad sandwiches are genuinely good. The nikuman (steamed pork bun) at the counter is warm and costs ¥130. Convenience stores here are not a last resort — they are a food group. Stock up on them after arriving late or before long travel days.</p>
-        </div>
-        <div class="place-card">
           <p class="distance">Morishita area, walkable</p>
           <h3>Local Izakayas</h3>
           <p>The streets between Kikukawa and Morishita have small neighborhood izakayas (Japanese gastropubs) that get lively after 7pm. No English menu, no tourist pricing, no problem — just point at what people around you are eating and order a beer first. The staff will figure it out. This is consistently the best way to eat in Tokyo.</p>
         </div>
-        <div class="place-card">
-          <p class="distance">Morishita, ~1 stop west</p>
-          <h3>Ramen</h3>
-          <p>You are in Tokyo. There is ramen everywhere and nearly all of it is good. Look for shops with plastic food models in the window or a vending machine just inside the door (you buy your ticket at the machine, then hand it to the chef). Sit at the counter if possible. Eat fast — ramen is not a dish that waits for you to take photos.</p>
+      </div>
+    </section>
+
+    <!-- Itinerary Ideas -->
+    <section class="trip-section" id="itinerary-ideas">
+      <div class="trip-section-header">
+        <p class="section-label">Ideas</p>
+        <h2>Itinerary Ideas</h2>
+        <p>Two optional side trips you mentioned. Both are good half-day adventures.</p>
+      </div>
+
+      <div class="place-grid">
+        <div class="place-card itinerary-card">
+          <img
+            class="itinerary-photo"
+            src="https://commons.wikimedia.org/wiki/Special:FilePath/Metropolitan_Area_Outer_Underground_Discharge_Channel_(10886150364).jpg"
+            alt="Interior of the Metropolitan Area Outer Underground Discharge Channel in Kasukabe"
+            loading="lazy"
+          >
+          <div class="itinerary-body">
+            <p class="distance">Kasukabe, Saitama · day trip</p>
+            <h3>Underground Flood Prevention Tunnel (G-Cans)</h3>
+            <p class="itinerary-meta">Official name: Metropolitan Area Outer Underground Discharge Channel</p>
+            <p>The giant underground flood-control chamber with concrete columns ("underground temple" vibe). Tours are limited and require advance booking, so this is a plan-ahead stop.</p>
+            <p><strong>Transit idea:</strong> Kikukawa -> Shinjuku Line to Jimbocho -> Hanzomon Line to Kitasenju -> Tobu line toward Kasukabe area, then local bus/taxi to the site.</p>
+          </div>
         </div>
-        <div class="place-card">
-          <p class="distance">Multiple spots</p>
-          <h3>Yakitori Under the Tracks</h3>
-          <p>Near any major Tokyo station you'll find yakitori (grilled skewer) restaurants tucked under or beside the elevated train lines. Look for the smoke and the red lanterns. Order a beer, point at the menu, and eat skewers of things you may not be entirely sure about. This is fine. All of it is good.</p>
+
+        <div class="place-card itinerary-card">
+          <img
+            class="itinerary-photo"
+            src="https://commons.wikimedia.org/wiki/Special:FilePath/Machida_Tokyu_Twins_West.jpg"
+            alt="Machida Tokyu Twins area near Machida Station"
+            loading="lazy"
+          >
+          <div class="itinerary-body">
+            <p class="distance">Machida · west Tokyo edge</p>
+            <h3>Machida Retro Mall Stop</h3>
+            <p class="itinerary-meta">Plan: check out the older, worn-in mall vibe around Machida Station</p>
+            <p>Machida has a mix of big commercial blocks and older shopping interiors that feel more lived-in than central Tokyo malls. Good for photos, random finds, and a slower half-day wandering plan.</p>
+            <p><strong>Transit idea:</strong> Kikukawa -> Shinjuku Line to Shinjuku -> Odakyu Odawara Line rapid express to Machida.</p>
+          </div>
         </div>
       </div>
     </section>
@@ -569,20 +606,9 @@
           </ul>
         </div>
         <div class="route-card">
-          <span class="route-time">~15 min walk or 1 stop</span>
-          <h3>Ryogoku</h3>
-          <p class="route-desc">Walk north along the river — it's a pleasant 15 minutes — or take the Toei Oedo Line one stop from Morishita. The Kokugikan arena and Edo-Tokyo Museum anchor the neighborhood. If tournaments are running while you're here, get tickets. If not, eat chanko nabe and feel large anyway.</p>
-          <ul class="route-steps-inline">
-            <li>Kikukawa</li><li class="arrow">→</li>
-            <li>Walk north ~15 min</li><li class="arrow">OR</li>
-            <li>Toei Shinjuku Line → Morishita</li><li class="arrow">→</li>
-            <li>Toei Oedo Line → Ryogoku</li>
-          </ul>
-        </div>
-        <div class="route-card">
           <span class="route-time">~25 min &nbsp;·&nbsp; 1 Transfer</span>
           <h3>Akihabara</h3>
-          <p class="route-desc">Electric Town — seven stories of electronics, anime merchandise, and the particular energy of a place that has completely committed to a very specific aesthetic. Even if you don't care about any of it, it's worth one visit just to understand that this is real and not a set. The side streets have good cheap ramen too.</p>
+          <p class="route-desc">Electric Town — stacked electronics shops, retro game floors, anime stores, and a very specific Tokyo energy. Even if you are not shopping, it is worth a walk for the atmosphere and side-street ramen.</p>
           <ul class="route-steps-inline">
             <li>Kikukawa</li><li class="arrow">→</li>
             <li>Toei Shinjuku Line → Ogawamachi</li><li class="arrow">→</li>
@@ -598,54 +624,6 @@
             <li>Toei Shinjuku Line → Shinjuku</li><li class="arrow">→</li>
             <li>JR Yamanote Line (3 stops south) → Harajuku</li>
           </ul>
-        </div>
-      </div>
-    </section>
-
-    <!-- Tips -->
-    <section class="trip-section" id="tips">
-      <div class="trip-section-header">
-        <p class="section-label">Notes</p>
-        <h2>Things Worth Knowing</h2>
-        <p>A short list of things that will make your trip significantly less confusing.</p>
-      </div>
-
-      <div class="tips-grid">
-        <div class="tip-card">
-          <h4>Suica Card</h4>
-          <p>Tap it on every train gate in and out. Works on JR, Tokyo Metro, Toei, and buses. Also pays for convenience store food, vending machines, and some restaurants. Top up at any station machine. Do not let it run out mid-journey — you'll get stuck at the exit gate in front of everyone.</p>
-        </div>
-        <div class="tip-card">
-          <h4>Google Maps</h4>
-          <p>Works perfectly for Tokyo transit. Tells you the exact platform number, how many stops, which exit to take. Use it without shame. Every local is also using their phone to navigate. Download the map offline before you land, just in case.</p>
-        </div>
-        <div class="tip-card">
-          <h4>Train etiquette</h4>
-          <p>No phone calls. No eating (except some long-distance trains). Keep your voice down. Give up your seat to elderly, pregnant, or disabled people. Backpack off your back during rush hour — hold it in front of you. Everyone does this automatically and it will become natural quickly.</p>
-        </div>
-        <div class="tip-card">
-          <h4>Cash</h4>
-          <p>Japan is more cash-based than you expect. Many small restaurants and izakayas are cash only. 7-Eleven and Lawson ATMs accept foreign cards reliably. Withdraw ¥20,000 or so when you arrive and carry it. The currency is yen — mentally divide by 150 to get USD approximately.</p>
-        </div>
-        <div class="tip-card">
-          <h4>Language</h4>
-          <p>Almost nobody speaks English, but almost nobody needs to. Google Translate with the camera feature (point your phone at text) works extremely well for menus. The Japanese language notes app DeepL is better than Google Translate for longer text. Just pointing at things works 80% of the time anyway.</p>
-        </div>
-        <div class="tip-card">
-          <h4>Restaurants</h4>
-          <p>A queue outside a small restaurant is a sign, not a warning. The queue means it's good. Ten minutes wait is always worth it. Plastic food models in the window or a vending machine at the entrance means you order without speaking, which is beginner-friendly. The food will be excellent.</p>
-        </div>
-        <div class="tip-card">
-          <h4>Vending Machines</h4>
-          <p>Everywhere. Hot and cold drinks, ¥120–150. Buying a hot can of Boss Coffee from a street vending machine at 11pm is a Tokyo rite of passage. Don't overthink it.</p>
-        </div>
-        <div class="tip-card">
-          <h4>Bowing</h4>
-          <p>A small head nod when entering or leaving a restaurant, or when thanking someone, is appreciated and correct. You don't need to perform a full bow — that's for very formal situations. Just acknowledge people. Arigatou gozaimasu (ah-ree-gah-toh go-zai-mas) is "thank you very much" and people will be pleased you used it.</p>
-        </div>
-        <div class="tip-card">
-          <h4>Getting Lost</h4>
-          <p>Will happen. Is fine. Tokyo is very safe and most people will try to help if you look confused. Station staff are trained to assist non-Japanese speakers and most carry basic phrase cards. If in doubt: find a koban (small police box, usually at major intersections) — officers there will walk you to your destination if necessary. This has happened.</p>
         </div>
       </div>
     </section>
@@ -698,7 +676,6 @@
       { name: 'Comfy Home Kikukawa', note: 'Your hotel', lat: 35.6872, lng: 139.8100, hotel: true },
       { name: 'Kikukawa Station', note: 'Toei Shinjuku Line · Exit A2', lat: 35.6879, lng: 139.8076, hotel: false },
       { name: 'Ryogoku Kokugikan', note: 'Sumo arena · ~15 min walk', lat: 35.6953, lng: 139.7929, hotel: false },
-      { name: 'Edo-Tokyo Museum', note: 'History museum · next to Ryogoku', lat: 35.6963, lng: 139.7956, hotel: false },
       { name: 'Kiyosumi Garden', note: 'Traditional garden · Meiji era', lat: 35.6803, lng: 139.8009, hotel: false },
       { name: 'Kiyosumi-Shirakawa', note: 'Coffee district · ~10 min walk south', lat: 35.6815, lng: 139.8030, hotel: false },
       { name: 'Monzen-Nakacho', note: 'Izakaya district · ~20 min transit', lat: 35.6728, lng: 139.7988, hotel: false },
