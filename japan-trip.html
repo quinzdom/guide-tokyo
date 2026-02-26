@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tokyo — Jay &amp; Noah's Guide</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+  <style>
+    .trip-hero {
+      background: linear-gradient(160deg, #1e1e1e 0%, #2c2c2c 55%, #3a3530 100%);
+      color: var(--color-hero-text);
+      padding: var(--space-xl) 0 var(--space-lg);
+      text-align: center;
+    }
+    .trip-hero h1 {
+      font-size: clamp(2.5rem, 6vw, 5rem);
+      letter-spacing: -0.02em;
+      margin-bottom: var(--space-xs);
+      color: var(--color-hero-text);
+    }
+    .trip-hero .hero-eyebrow {
+      font-family: var(--font-body);
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--color-accent);
+      margin-bottom: var(--space-sm);
+    }
+    .trip-hero .hero-subtitle {
+      font-size: 1.05rem;
+      color: rgba(250,249,246,0.65);
+      max-width: 520px;
+      margin: var(--space-sm) auto 0;
+      font-style: italic;
+    }
+
+    /* Trip-specific typography */
+    .trip-section {
+      padding: var(--space-xl) 0;
+      border-bottom: 1px solid var(--color-border);
+    }
+    .trip-section:last-of-type { border-bottom: none; }
+    .trip-section-header {
+      margin-bottom: var(--space-lg);
+    }
+    .trip-section-header h2 {
+      margin-bottom: var(--space-xs);
+    }
+    .trip-section-header p {
+      color: var(--color-text-muted);
+      font-size: 1rem;
+    }
+
+    /* Step list */
+    .step-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-md);
+    }
+    .step-list li {
+      display: grid;
+      grid-template-columns: 2.5rem 1fr;
+      gap: var(--space-sm);
+      align-items: start;
+    }
+    .step-num {
+      width: 2rem;
+      height: 2rem;
+      border-radius: 50%;
+      background: var(--color-accent);
+      color: #fff;
+      font-size: 0.8rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 0.15rem;
+    }
+    .step-body strong {
+      display: block;
+      font-size: 0.95rem;
+      color: var(--color-text);
+      margin-bottom: 0.25rem;
+    }
+    .step-body p {
+      font-size: 0.9rem;
+      color: var(--color-text-muted);
+      max-width: none;
+      margin: 0;
+    }
+    .step-body .step-note {
+      display: inline-block;
+      margin-top: 0.35rem;
+      font-size: 0.8rem;
+      padding: 0.2rem 0.5rem;
+      background: var(--color-bg);
+      border: 1px solid var(--color-border);
+      border-radius: 2px;
+      color: var(--color-text-muted);
+    }
+
+    /* Route options */
+    .route-options {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-md);
+      margin-bottom: var(--space-lg);
+    }
+    .route-option {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      padding: var(--space-md);
+    }
+    .route-option.recommended {
+      border-color: var(--color-accent);
+    }
+    .route-option-label {
+      font-family: var(--font-body);
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: var(--space-xs);
+    }
+    .route-option.recommended .route-option-label { color: var(--color-accent); }
+    .route-option-label.alt-label { color: var(--color-text-muted); }
+    .route-option h3 {
+      font-size: 1.1rem;
+      margin-bottom: 0.25rem;
+    }
+    .route-meta {
+      font-size: 0.85rem;
+      color: var(--color-text-muted);
+      margin-bottom: var(--space-sm);
+    }
+    .route-meta strong { color: var(--color-text); }
+
+    /* Map */
+    #trip-map {
+      width: 100%;
+      height: 480px;
+      border-radius: var(--radius);
+      border: 1px solid var(--color-border);
+      margin-top: var(--space-md);
+    }
+
+    /* Place grid */
+    .place-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: var(--space-md);
+    }
+    .place-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      padding: var(--space-md);
+    }
+    .place-card h3 {
+      font-size: 1.15rem;
+      margin-bottom: 0.3rem;
+    }
+    .place-card .distance {
+      font-size: 0.78rem;
+      color: var(--color-accent);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: var(--space-xs);
+    }
+    .place-card p {
+      font-size: 0.9rem;
+      color: var(--color-text-muted);
+      max-width: none;
+    }
+
+    /* Getting around */
+    .route-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      padding: var(--space-md);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-xs);
+    }
+    .route-card h3 {
+      font-size: 1.2rem;
+      margin-bottom: 0;
+    }
+    .route-card .route-time {
+      font-size: 0.8rem;
+      color: var(--color-accent);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+    .route-card .route-desc {
+      font-size: 0.88rem;
+      color: var(--color-text-muted);
+      max-width: none;
+    }
+    .route-steps-inline {
+      list-style: none;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.3rem;
+      align-items: center;
+      margin-top: 0.5rem;
+    }
+    .route-steps-inline li {
+      font-size: 0.8rem;
+      padding: 0.15rem 0.5rem;
+      background: var(--color-bg);
+      border: 1px solid var(--color-border);
+      border-radius: 2px;
+      color: var(--color-text);
+    }
+    .route-steps-inline li.arrow {
+      background: none;
+      border: none;
+      color: var(--color-text-muted);
+      padding: 0 0.1rem;
+    }
+
+    /* Tips */
+    .tips-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: var(--space-md);
+    }
+    .tip-card {
+      padding: var(--space-md);
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+    }
+    .tip-card h4 {
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--color-text);
+      margin-bottom: var(--space-xs);
+    }
+    .tip-card p {
+      font-size: 0.88rem;
+      color: var(--color-text-muted);
+      max-width: none;
+    }
+
+    /* Hotel card */
+    .hotel-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      padding: var(--space-md) var(--space-lg);
+      max-width: 620px;
+    }
+    .hotel-card h3 {
+      font-size: 1.5rem;
+      margin-bottom: var(--space-xs);
+    }
+    .hotel-detail {
+      display: flex;
+      gap: var(--space-sm);
+      align-items: baseline;
+      font-size: 0.9rem;
+      color: var(--color-text-muted);
+      padding: 0.5rem 0;
+      border-bottom: 1px solid var(--color-border);
+    }
+    .hotel-detail:last-child { border-bottom: none; }
+    .hotel-detail .label {
+      font-weight: 600;
+      color: var(--color-text);
+      min-width: 90px;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    @media (max-width: 768px) {
+      .route-options { grid-template-columns: 1fr; }
+      #trip-map { height: 340px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Hero -->
+  <header class="trip-hero">
+    <div class="container">
+      <p class="hero-eyebrow">Jay &amp; Noah's guide</p>
+      <h1>Tokyo</h1>
+      <p class="hero-subtitle">Everything you need to not die. Or at least to get to your hotel.</p>
+    </div>
+  </header>
+
+  <div class="container">
+
+    <!-- Getting Here -->
+    <section class="trip-section" id="getting-here">
+      <div class="trip-section-header">
+        <p class="section-label">Step One</p>
+        <h2>Getting Here</h2>
+        <p>From Narita Airport international arrivals to your hotel. It sounds complicated. It is slightly complicated. But the trains run on time — embarrassingly on time — so just follow the signs and you'll be fine.</p>
+      </div>
+
+      <div class="route-options">
+        <div class="route-option recommended">
+          <p class="route-option-label">Recommended</p>
+          <h3>Narita Express (N'EX)</h3>
+          <p class="route-meta">~90 min total &nbsp;·&nbsp; <strong>~¥3,350</strong> &nbsp;·&nbsp; 1 transfer</p>
+          <p style="font-size:0.85rem; color: var(--color-text-muted);">The easy option. Reserved seats, luggage racks, direct to Shinjuku. Worth the extra cost after a long flight.</p>
+        </div>
+        <div class="route-option">
+          <p class="route-option-label alt-label">Budget</p>
+          <h3>Keisei Skyliner</h3>
+          <p class="route-meta">~100 min total &nbsp;·&nbsp; <strong>~¥2,800</strong> &nbsp;·&nbsp; 2 transfers</p>
+          <p style="font-size:0.85rem; color: var(--color-text-muted);">Cheaper, still fast, one more transfer at Nippori. Fine if you like puzzles.</p>
+        </div>
+      </div>
+
+      <!-- N'EX Steps -->
+      <h3 style="margin-bottom: var(--space-md); font-size: 1.1rem;">Option A — Narita Express (Recommended)</h3>
+      <ol class="step-list" style="margin-bottom: var(--space-lg);">
+        <li>
+          <span class="step-num">1</span>
+          <div class="step-body">
+            <strong>Get a Suica IC Card — do this first</strong>
+            <p>After clearing customs, before anything else: find the green JR ticket machines or the Suica counter. Buy a Suica IC card. It's ¥2,000 total (¥500 refundable deposit + ¥1,500 balance). This card taps you through every train, subway, and bus gate in Tokyo — and also pays for convenience store food, which you will be eating a lot of. Add more credit at any station machine. Do not lose it.</p>
+            <span class="step-note">Terminal 1: B1F near JR East Travel Service Center &nbsp;·&nbsp; Terminal 2: B1F same</span>
+          </div>
+        </li>
+        <li>
+          <span class="step-num">2</span>
+          <div class="step-body">
+            <strong>Buy your N'EX ticket</strong>
+            <p>At the same JR counter or green machines, buy a Narita Express (N'EX) reserved seat to <strong>Shinjuku</strong>. Cost is approximately ¥3,070. The machines have English. Show the staff "Shinjuku" if needed — they're used to it. The N'EX runs roughly every 30–60 minutes and takes about 80 minutes to Shinjuku.</p>
+            <span class="step-note">Departure boards show "N'EX Narita Express" — look for your platform</span>
+          </div>
+        </li>
+        <li>
+          <span class="step-num">3</span>
+          <div class="step-body">
+            <strong>Board the N'EX to Shinjuku</strong>
+            <p>Find your car and seat number on your ticket. Luggage racks are at the ends of each car. The train is quiet — probably quieter than you're used to. Don't make phone calls. Don't talk loudly. Just sit, look out the window, and accept that you are now in Japan. The ride is about 80 minutes.</p>
+          </div>
+        </li>
+        <li>
+          <span class="step-num">4</span>
+          <div class="step-body">
+            <strong>Get off at Shinjuku Station</strong>
+            <p>Shinjuku is the last stop. You'll exit the N'EX into Shinjuku Station, which is the largest and most labyrinthine train station on earth. Do not panic. You are looking for the <strong>Toei Shinjuku Line</strong>. Follow signs that say "Toei" and look for the orange/magenta Toei colors. The entrance is within the station complex — tap your Suica at the gate.</p>
+            <span class="step-note">Shinjuku has 200+ exits. You want the Toei Shinjuku Line, not any JR line</span>
+          </div>
+        </li>
+        <li>
+          <span class="step-num">5</span>
+          <div class="step-body">
+            <strong>Board the Toei Shinjuku Line toward Motoyawata (本八幡)</strong>
+            <p>Platform is inside the Toei section. Board any train heading toward <strong>Motoyawata (本八幡)</strong> or <strong>Hashimoto (橋本)</strong> — both pass through Kikukawa. The trains come every few minutes. Count 11 stops: Shinjuku-Sanchome → Akebonobashi → Ichigaya → Kudanshita → Jimbocho → Ogawamachi → Iwamotocho → Bakuroyokoyama → Hamacho → Morishita → <strong>Kikukawa</strong>. Station names are displayed in English inside the train.</p>
+            <span class="step-note">Cost from Shinjuku to Kikukawa: ~¥280 via Suica</span>
+          </div>
+        </li>
+        <li>
+          <span class="step-num">6</span>
+          <div class="step-body">
+            <strong>Exit at Kikukawa, take Exit A2</strong>
+            <p>Get off at Kikukawa Station (菊川). Take <strong>Exit A2</strong>. You're now in your neighborhood. Comfy Home Kikukawa is a short walk from the exit. If confused, open Google Maps — it works perfectly in Tokyo and will walk you in via satellite if needed.</p>
+          </div>
+        </li>
+      </ol>
+
+      <!-- Keisei Steps -->
+      <h3 style="margin-bottom: var(--space-md); font-size: 1.1rem;">Option B — Keisei Skyliner (Budget)</h3>
+      <ol class="step-list">
+        <li>
+          <span class="step-num">1</span>
+          <div class="step-body">
+            <strong>Get a Suica IC Card (same as above)</strong>
+            <p>Do this first regardless of which route you take.</p>
+          </div>
+        </li>
+        <li>
+          <span class="step-num">2</span>
+          <div class="step-body">
+            <strong>Find the Keisei Line and board the Skyliner to Nippori</strong>
+            <p>Look for signs to the Keisei line — it's a separate ticketing system from JR. Buy a Keisei Skyliner ticket to <strong>Nippori</strong> (~¥2,570). The Skyliner is a separate express train (not the N'EX) and takes about 40 minutes to Nippori. It's fast and comfortable, just a bit less obvious to navigate at the airport.</p>
+          </div>
+        </li>
+        <li>
+          <span class="step-num">3</span>
+          <div class="step-body">
+            <strong>At Nippori, transfer to JR Yamanote Line toward Shinjuku</strong>
+            <p>From Nippori Station, follow signs to the <strong>JR Yamanote Line</strong> (the green circular line on all maps). Board heading toward Shinjuku (inner loop, about 5 stops through Ueno, Akihabara, etc.). About 25 minutes. Tap Suica at the gate.</p>
+          </div>
+        </li>
+        <li>
+          <span class="step-num">4</span>
+          <div class="step-body">
+            <strong>From Shinjuku, continue as per Option A (Steps 4–6)</strong>
+            <p>Same from here: Toei Shinjuku Line, 11 stops to Kikukawa, Exit A2.</p>
+          </div>
+        </li>
+      </ol>
+    </section>
+
+    <!-- Hotel -->
+    <section class="trip-section" id="hotel">
+      <div class="trip-section-header">
+        <p class="section-label">Home Base</p>
+        <h2>Your Hotel</h2>
+        <p>You're staying in Sumida Ward — an actual neighborhood, not a tourist district. Quiet, local, good ramen nearby.</p>
+      </div>
+      <div class="hotel-card">
+        <h3>Comfy Home Kikukawa</h3>
+        <div style="margin-top: var(--space-sm);">
+          <div class="hotel-detail">
+            <span class="label">Station</span>
+            <span>Kikukawa (菊川), Toei Shinjuku Line</span>
+          </div>
+          <div class="hotel-detail">
+            <span class="label">Exit</span>
+            <span>A2 — walk east, a few minutes</span>
+          </div>
+          <div class="hotel-detail">
+            <span class="label">Area</span>
+            <span>Sumida Ward — working-class Tokyo, unpretentious, genuinely good food nearby</span>
+          </div>
+          <div class="hotel-detail">
+            <span class="label">Konbini</span>
+            <span>There will be a 7-Eleven or Lawson within two minutes of the hotel. This is true everywhere in Tokyo. You will come to depend on it.</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Neighborhood Map -->
+    <section class="trip-section" id="neighborhood">
+      <div class="trip-section-header">
+        <p class="section-label">Your Backyard</p>
+        <h2>The Neighborhood</h2>
+        <p>Kikukawa sits between two underrated Tokyo corridors — the old Sumida riverside to the east, and the increasingly hip Kiyosumi-Shirakawa coffee district to the south. Ryogoku (the sumo heartland) is a short walk north. You lucked out.</p>
+      </div>
+
+      <div id="trip-map"></div>
+
+      <div class="place-grid" style="margin-top: var(--space-lg);">
+        <div class="place-card">
+          <p class="distance">~15 min walk north</p>
+          <h3>Ryogoku</h3>
+          <p>The neighborhood that feeds and houses sumo wrestlers. The Kokugikan arena is here — even outside tournament seasons it's worth the walk. The chanko nabe (wrestler's stew, essentially a large hot pot) restaurants in the area are genuinely excellent and not particularly expensive. You'll eat a lot.</p>
+        </div>
+        <div class="place-card">
+          <p class="distance">~10 min walk south</p>
+          <h3>Kiyosumi-Shirakawa</h3>
+          <p>Tokyo's serious coffee neighborhood. Third-wave cafes, design studios, a beautiful garden from the Meiji era. Quieter than most Tokyo neighborhoods, which is either great or suspicious depending on your personality. The coffee is not a joke — this is where Japanese barista culture is very serious about itself, and you should let it be.</p>
+        </div>
+        <div class="place-card">
+          <p class="distance">~20 min by transit</p>
+          <h3>Monzen-Nakacho</h3>
+          <p>A historic merchant district with a shrine at its center and an izakaya street that gets progressively louder as the night goes on. Great place for your first proper Japanese bar experience — just order by pointing and say "hitotsu" (one) when you want something. Works every time.</p>
+        </div>
+        <div class="place-card">
+          <p class="distance">~25 min by transit</p>
+          <h3>Asakusa</h3>
+          <p>Senso-ji temple, Nakamise shopping street, and what Tokyo looked like before it decided to become the future. Touristy, yes, but correctly so. Go early morning to actually see the temple without a crowd. At 8am it is serene. At noon it is Disneyland. Your choice.</p>
+        </div>
+        <div class="place-card">
+          <p class="distance">~15 min walk north</p>
+          <h3>Edo-Tokyo Museum</h3>
+          <p>A massive museum documenting Tokyo's transformation from feudal Edo to the city you're currently lost in. Worth a few hours. The scale models of old Tokyo are genuinely impressive. Located next to Ryogoku, so combine with chanko nabe and make a day of it.</p>
+        </div>
+        <div class="place-card">
+          <p class="distance">~5 min walk</p>
+          <h3>Sumida Riverside</h3>
+          <p>Walk east and you'll hit the Sumida River. The riverside paths are great for evening walks — nice views of the Skytree tower lit up against the sky, quiet enough that you can actually think, and a useful reminder that Tokyo has more than just neon and crowds.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Eat & Drink -->
+    <section class="trip-section" id="eat">
+      <div class="trip-section-header">
+        <p class="section-label">Food</p>
+        <h2>Eat &amp; Drink Nearby</h2>
+        <p>You are in one of the best food cities on the planet. Manage expectations upward.</p>
+      </div>
+
+      <div class="place-grid">
+        <div class="place-card">
+          <p class="distance">Ryogoku, ~15 min walk</p>
+          <h3>Chanko Nabe</h3>
+          <p>The traditional hot pot served at sumo stables. Large, deeply savory, built for people who need to gain weight. Several restaurants in the Ryogoku area specialize in it — look for ones advertising "chanko" (ちゃんこ). Kirishima and Tomozuna are well-regarded names. Order the set course and eat too much. This is correct behavior.</p>
+        </div>
+        <div class="place-card">
+          <p class="distance">Kiyosumi-Shirakawa, ~10 min walk</p>
+          <h3>Third-Wave Coffee</h3>
+          <p>The Kiyosumi-Shirakawa area is where Tokyo's serious coffee culture lives. Omotesando Coffee and Fuglen Tokyo (originally from Oslo, which is fine) have outposts nearby. The coffee is excellent and the rooms are usually very quiet, which may feel unsettling if you're used to Starbucks. Lean into it.</p>
+        </div>
+        <div class="place-card">
+          <p class="distance">Everywhere, seriously</p>
+          <h3>Convenience Store Food</h3>
+          <p>Before you dismiss this: a 7-Eleven onigiri (rice ball) in Japan costs about ¥150 and is perfect. The egg salad sandwiches are genuinely good. The nikuman (steamed pork bun) at the counter is warm and costs ¥130. Convenience stores here are not a last resort — they are a food group. Stock up on them after arriving late or before long travel days.</p>
+        </div>
+        <div class="place-card">
+          <p class="distance">Morishita area, walkable</p>
+          <h3>Local Izakayas</h3>
+          <p>The streets between Kikukawa and Morishita have small neighborhood izakayas (Japanese gastropubs) that get lively after 7pm. No English menu, no tourist pricing, no problem — just point at what people around you are eating and order a beer first. The staff will figure it out. This is consistently the best way to eat in Tokyo.</p>
+        </div>
+        <div class="place-card">
+          <p class="distance">Morishita, ~1 stop west</p>
+          <h3>Ramen</h3>
+          <p>You are in Tokyo. There is ramen everywhere and nearly all of it is good. Look for shops with plastic food models in the window or a vending machine just inside the door (you buy your ticket at the machine, then hand it to the chef). Sit at the counter if possible. Eat fast — ramen is not a dish that waits for you to take photos.</p>
+        </div>
+        <div class="place-card">
+          <p class="distance">Multiple spots</p>
+          <h3>Yakitori Under the Tracks</h3>
+          <p>Near any major Tokyo station you'll find yakitori (grilled skewer) restaurants tucked under or beside the elevated train lines. Look for the smoke and the red lanterns. Order a beer, point at the menu, and eat skewers of things you may not be entirely sure about. This is fine. All of it is good.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Getting Around -->
+    <section class="trip-section" id="getting-around">
+      <div class="trip-section-header">
+        <p class="section-label">Transit</p>
+        <h2>Getting Around</h2>
+        <p>Tokyo's train system is not as complicated as it looks. Use Google Maps for navigation — it knows every line, every transfer, every exit. Tap Suica on the way in, tap Suica on the way out. That's it.</p>
+      </div>
+
+      <div class="place-grid">
+        <div class="route-card">
+          <span class="route-time">~20 min &nbsp;·&nbsp; Direct</span>
+          <h3>Shinjuku</h3>
+          <p class="route-desc">The most chaotic square kilometer in Japan. Neon, crowds, infinite food, Kabukicho at night (the famous red-light district — worth seeing even just as spectacle), and the world's busiest train station. Useful as a transit hub and overwhelming as a destination. Both are correct.</p>
+          <ul class="route-steps-inline">
+            <li>Kikukawa</li><li class="arrow">→</li>
+            <li>Toei Shinjuku Line (toward Motoyawata)</li><li class="arrow">→</li>
+            <li>Shinjuku (11 stops)</li>
+          </ul>
+        </div>
+        <div class="route-card">
+          <span class="route-time">~30 min &nbsp;·&nbsp; 1 Transfer</span>
+          <h3>Shibuya</h3>
+          <p class="route-desc">The famous scramble crossing, hundreds of teenagers, brand shops stacked ten stories high, and the Hachiko statue (a dog, beloved, long story). Go at night for the full effect of the crossing. Crowded in a way that feels performative, which is sort of the point.</p>
+          <ul class="route-steps-inline">
+            <li>Kikukawa</li><li class="arrow">→</li>
+            <li>Toei Shinjuku Line → Shinjuku</li><li class="arrow">→</li>
+            <li>JR Yamanote Line (2 stops south) → Shibuya</li>
+          </ul>
+        </div>
+        <div class="route-card">
+          <span class="route-time">~25 min &nbsp;·&nbsp; 1 Transfer</span>
+          <h3>Asakusa</h3>
+          <p class="route-desc">Senso-ji is the oldest temple in Tokyo and the one that looks like every photo you've seen of Japan. Still worth visiting, especially early morning. The surrounding streets have good street food and overpriced but fun souvenirs. The Nakamise market leading to the temple gate has been selling snacks for 300 years — that kind of consistency is worth respecting.</p>
+          <ul class="route-steps-inline">
+            <li>Kikukawa</li><li class="arrow">→</li>
+            <li>Toei Shinjuku Line → Ogawamachi</li><li class="arrow">→</li>
+            <li>Tokyo Metro Ginza Line → Asakusa</li>
+          </ul>
+        </div>
+        <div class="route-card">
+          <span class="route-time">~15 min walk or 1 stop</span>
+          <h3>Ryogoku</h3>
+          <p class="route-desc">Walk north along the river — it's a pleasant 15 minutes — or take the Toei Oedo Line one stop from Morishita. The Kokugikan arena and Edo-Tokyo Museum anchor the neighborhood. If tournaments are running while you're here, get tickets. If not, eat chanko nabe and feel large anyway.</p>
+          <ul class="route-steps-inline">
+            <li>Kikukawa</li><li class="arrow">→</li>
+            <li>Walk north ~15 min</li><li class="arrow">OR</li>
+            <li>Toei Shinjuku Line → Morishita</li><li class="arrow">→</li>
+            <li>Toei Oedo Line → Ryogoku</li>
+          </ul>
+        </div>
+        <div class="route-card">
+          <span class="route-time">~25 min &nbsp;·&nbsp; 1 Transfer</span>
+          <h3>Akihabara</h3>
+          <p class="route-desc">Electric Town — seven stories of electronics, anime merchandise, and the particular energy of a place that has completely committed to a very specific aesthetic. Even if you don't care about any of it, it's worth one visit just to understand that this is real and not a set. The side streets have good cheap ramen too.</p>
+          <ul class="route-steps-inline">
+            <li>Kikukawa</li><li class="arrow">→</li>
+            <li>Toei Shinjuku Line → Ogawamachi</li><li class="arrow">→</li>
+            <li>Short walk to Akihabara Station (JR)</li>
+          </ul>
+        </div>
+        <div class="route-card">
+          <span class="route-time">~30 min &nbsp;·&nbsp; 1 Transfer</span>
+          <h3>Harajuku &amp; Meiji Shrine</h3>
+          <p class="route-desc">Meiji Shrine is a large forested Shinto shrine in the middle of the city — genuinely peaceful in a way that makes you forget you're surrounded by 14 million people. Harajuku is right next door and is the opposite of peaceful. The famous Takeshita Street is teen fashion at full saturation. Both experiences in one stop. Efficient.</p>
+          <ul class="route-steps-inline">
+            <li>Kikukawa</li><li class="arrow">→</li>
+            <li>Toei Shinjuku Line → Shinjuku</li><li class="arrow">→</li>
+            <li>JR Yamanote Line (3 stops south) → Harajuku</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tips -->
+    <section class="trip-section" id="tips">
+      <div class="trip-section-header">
+        <p class="section-label">Notes</p>
+        <h2>Things Worth Knowing</h2>
+        <p>A short list of things that will make your trip significantly less confusing.</p>
+      </div>
+
+      <div class="tips-grid">
+        <div class="tip-card">
+          <h4>Suica Card</h4>
+          <p>Tap it on every train gate in and out. Works on JR, Tokyo Metro, Toei, and buses. Also pays for convenience store food, vending machines, and some restaurants. Top up at any station machine. Do not let it run out mid-journey — you'll get stuck at the exit gate in front of everyone.</p>
+        </div>
+        <div class="tip-card">
+          <h4>Google Maps</h4>
+          <p>Works perfectly for Tokyo transit. Tells you the exact platform number, how many stops, which exit to take. Use it without shame. Every local is also using their phone to navigate. Download the map offline before you land, just in case.</p>
+        </div>
+        <div class="tip-card">
+          <h4>Train etiquette</h4>
+          <p>No phone calls. No eating (except some long-distance trains). Keep your voice down. Give up your seat to elderly, pregnant, or disabled people. Backpack off your back during rush hour — hold it in front of you. Everyone does this automatically and it will become natural quickly.</p>
+        </div>
+        <div class="tip-card">
+          <h4>Cash</h4>
+          <p>Japan is more cash-based than you expect. Many small restaurants and izakayas are cash only. 7-Eleven and Lawson ATMs accept foreign cards reliably. Withdraw ¥20,000 or so when you arrive and carry it. The currency is yen — mentally divide by 150 to get USD approximately.</p>
+        </div>
+        <div class="tip-card">
+          <h4>Language</h4>
+          <p>Almost nobody speaks English, but almost nobody needs to. Google Translate with the camera feature (point your phone at text) works extremely well for menus. The Japanese language notes app DeepL is better than Google Translate for longer text. Just pointing at things works 80% of the time anyway.</p>
+        </div>
+        <div class="tip-card">
+          <h4>Restaurants</h4>
+          <p>A queue outside a small restaurant is a sign, not a warning. The queue means it's good. Ten minutes wait is always worth it. Plastic food models in the window or a vending machine at the entrance means you order without speaking, which is beginner-friendly. The food will be excellent.</p>
+        </div>
+        <div class="tip-card">
+          <h4>Vending Machines</h4>
+          <p>Everywhere. Hot and cold drinks, ¥120–150. Buying a hot can of Boss Coffee from a street vending machine at 11pm is a Tokyo rite of passage. Don't overthink it.</p>
+        </div>
+        <div class="tip-card">
+          <h4>Bowing</h4>
+          <p>A small head nod when entering or leaving a restaurant, or when thanking someone, is appreciated and correct. You don't need to perform a full bow — that's for very formal situations. Just acknowledge people. Arigatou gozaimasu (ah-ree-gah-toh go-zai-mas) is "thank you very much" and people will be pleased you used it.</p>
+        </div>
+        <div class="tip-card">
+          <h4>Getting Lost</h4>
+          <p>Will happen. Is fine. Tokyo is very safe and most people will try to help if you look confused. Station staff are trained to assist non-Japanese speakers and most carry basic phrase cards. If in doubt: find a koban (small police box, usually at major intersections) — officers there will walk you to your destination if necessary. This has happened.</p>
+        </div>
+      </div>
+    </section>
+
+  </div><!-- /container -->
+
+  <footer style="padding: var(--space-lg) 0; text-align: center; color: var(--color-text-muted); font-size: 0.85rem; border-top: 1px solid var(--color-border);">
+    Have a good trip. Don't lose your Suica card.
+  </footer>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script>
+    const map = L.map('trip-map', {
+      center: [35.6870, 139.8050],
+      zoom: 14,
+      scrollWheelZoom: false,
+      zoomControl: true
+    });
+
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
+      subdomains: 'abcd',
+      maxZoom: 19
+    }).addTo(map);
+
+    const markerIcon = L.divIcon({
+      className: 'map-marker',
+      html: '<div class="marker-pin"></div>',
+      iconSize: [16, 16],
+      iconAnchor: [8, 8],
+      popupAnchor: [0, -12]
+    });
+
+    const hotelIcon = L.divIcon({
+      className: 'map-marker',
+      html: '<div class="marker-pin" style="background:#2c2c2c; width:18px; height:18px;"></div>',
+      iconSize: [18, 18],
+      iconAnchor: [9, 9],
+      popupAnchor: [0, -13]
+    });
+
+    const popup = (name, note) => L.popup({ closeButton: false, className: 'map-popup-wrapper' }).setContent(
+      `<div class="map-popup">
+        <span class="map-popup-name" style="color:var(--color-text); font-family:var(--font-heading);">${name}</span>
+        <span class="map-popup-meta">${note}</span>
+      </div>`
+    );
+
+    const places = [
+      { name: 'Comfy Home Kikukawa', note: 'Your hotel', lat: 35.6872, lng: 139.8100, hotel: true },
+      { name: 'Kikukawa Station', note: 'Toei Shinjuku Line · Exit A2', lat: 35.6879, lng: 139.8076, hotel: false },
+      { name: 'Ryogoku Kokugikan', note: 'Sumo arena · ~15 min walk', lat: 35.6953, lng: 139.7929, hotel: false },
+      { name: 'Edo-Tokyo Museum', note: 'History museum · next to Ryogoku', lat: 35.6963, lng: 139.7956, hotel: false },
+      { name: 'Kiyosumi Garden', note: 'Traditional garden · Meiji era', lat: 35.6803, lng: 139.8009, hotel: false },
+      { name: 'Kiyosumi-Shirakawa', note: 'Coffee district · ~10 min walk south', lat: 35.6815, lng: 139.8030, hotel: false },
+      { name: 'Monzen-Nakacho', note: 'Izakaya district · ~20 min transit', lat: 35.6728, lng: 139.7988, hotel: false },
+      { name: 'Sumida River', note: 'Riverside walk · Skytree views', lat: 35.6870, lng: 139.8145, hotel: false },
+    ];
+
+    places.forEach(p => {
+      L.marker([p.lat, p.lng], { icon: p.hotel ? hotelIcon : markerIcon })
+        .addTo(map)
+        .bindPopup(popup(p.name, p.note));
+    });
+  </script>
+
+</body>
+</html>
