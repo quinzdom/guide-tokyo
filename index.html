@@ -110,8 +110,6 @@ Shinagawa
 Because of the size and particular composition of Tokyo, becoming familiar with these five core areas does not actually get you very far into understanding Tokyo. This book will improve your understanding of Tokyo systematically, in stages, with the information presented in order of importance and explanatory power.
 Now that I have briefly covered the five areas of Shinjuku, Shibuya, Marunouchi, Ikebukuro, Ueno, I will introduce the most important train line in Tokyo, the JR (East Japan Railway) Yamanote Line. This information is even more important than the previous section for someone who needs to navigate Tokyo for the first time. As a visitor to Tokyo, you can think of the Yamanote line as your most important tool for navigating the city.
 
-Restaurant
-
 You can see that all six of the major areas are connected by the Yamanote line, which runs in the loop. In addition, most of the other stations on the line are also prominent areas. Property and rent prices are at a premium near almost any station on the Yamanote line.
 If you only use the Yamanote line during your time in Tokyo you will have more than enough to do for many months, although it is of course not efficient to take the line when the stations you are going between are on opposite sides of the city, since it is a loop. For example, going from Shinjuku station to Tokyo station on the Yamanote line takes around 36 minutes while the JR Chuo line takes just 14 minutes. By the way, the JR Chuo line takes a bizarre route because it goes around the massive Imperial Palace area, as does every other train and metro.
 Here are some of the particularly interesting neighborhoods on the Yamanote line
@@ -412,7 +410,6 @@ Sugamo</pre>
         idxVeryQuickly,
         idxBecause,
         idxNow,
-        idxRestaurant,
         idxNeighborhoods
       ];
       if (required.some((index) => index < 0)) return;
@@ -548,10 +545,12 @@ Sugamo</pre>
       characteristicsPanel.appendChild(characteristicGrid);
 
       const transitionPanel = createPanel('', '');
-      appendParagraphs(transitionPanel, nonEmpty(idxBecause, idxRestaurant));
+      appendParagraphs(transitionPanel, nonEmpty(idxBecause, idxNow + 1));
 
-      const yamanotePanel = createPanel(lines[idxRestaurant], '');
-      appendParagraphs(yamanotePanel, nonEmpty(idxRestaurant + 1, idxNeighborhoods));
+      const yamanoteTitle = idxRestaurant >= 0 ? lines[idxRestaurant] : 'Yamanote Line';
+      const yamanoteStart = idxRestaurant >= 0 ? idxRestaurant + 1 : idxNow + 1;
+      const yamanotePanel = createPanel(yamanoteTitle, '');
+      appendParagraphs(yamanotePanel, nonEmpty(yamanoteStart, idxNeighborhoods));
       yamanotePanel.appendChild(create('h4', 'intro-subtitle', lines[idxNeighborhoods]));
 
       const stationList = create('div', 'station-list', '');
