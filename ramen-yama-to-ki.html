@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ramen Yama-to-ki &mdash; Tokyo Guide</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="container">
+      <a href="index.html" class="nav-logo">Tokyo <span>Guide</span></a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="neighborhoods.html">Neighborhoods</a></li>
+      </ul>
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <div class="container">
+    <a href="index.html" class="back-link">Back to guide</a>
+
+    <header class="place-hero">
+      <div class="place-meta-row">
+        <span class="tag">Ramen</span>
+        <span class="tag tag--neighborhood">Koenji</span>
+      </div>
+      <h1>Ramen Yama-to-ki</h1>
+      <div class="place-meta-row">
+        <span class="place-stat">
+          <span class="rating">
+            <span class="rating-star filled">★</span>
+            <span class="rating-star filled">★</span>
+            <span class="rating-star filled">★</span>
+          </span>
+        </span>
+        <span class="place-stat-divider">&middot;</span>
+        <span class="place-stat">avg. <strong>&yen;1,200</strong></span>
+      </div>
+    </header>
+
+    <div class="place-body">
+      <p>The best ramen I have ever had. I recommend the shoyu ramen. The ramen is light. It has been consistently good when I've gone. The location is a little bit out of the way and I have had to line up for up to thirty minutes.</p>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+      <p>Tokyo Guide &mdash; A personal collection of recommendations.</p>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('navToggle').addEventListener('click', function() {
+      document.getElementById('navLinks').classList.toggle('open');
+    });
+  </script>
+
+</body>
+</html>

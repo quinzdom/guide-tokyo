@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Thai Isaan &mdash; Tokyo Guide</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="container">
+      <a href="index.html" class="nav-logo">Tokyo <span>Guide</span></a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="neighborhoods.html">Neighborhoods</a></li>
+      </ul>
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <div class="container">
+    <a href="index.html" class="back-link">Back to guide</a>
+
+    <header class="place-hero">
+      <div class="place-meta-row">
+        <span class="tag">Foreign</span>
+        <span class="tag tag--neighborhood">Ebisu</span>
+      </div>
+      <h1>Thai Isaan</h1>
+      <div class="place-meta-row">
+        <span class="place-stat">
+          <span class="rating">
+            <span class="rating-star filled">★</span>
+            <span class="rating-star">★</span>
+            <span class="rating-star">★</span>
+          </span>
+        </span>
+        <span class="place-stat-divider">&middot;</span>
+        <span class="place-stat">avg. <strong>&yen;1,500</strong></span>
+      </div>
+    </header>
+
+    <div class="place-body">
+      <p>Nice, fairly casual thai place. I recommend the pad see ew.</p>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+      <p>Tokyo Guide &mdash; A personal collection of recommendations.</p>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('navToggle').addEventListener('click', function() {
+      document.getElementById('navLinks').classList.toggle('open');
+    });
+  </script>
+
+</body>
+</html>

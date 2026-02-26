@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tokyo Guide</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="container">
+      <a href="index.html" class="nav-logo">Tokyo <span>Guide</span></a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="index.html" class="active">Home</a></li>
+        <li><a href="neighborhoods.html">Neighborhoods</a></li>
+      </ul>
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <header class="hero">
+    <div class="container">
+      <h1>A Personal Guide to <em>Tokyo</em></h1>
+      <p class="hero-subtitle">
+        A curated collection of places worth visiting &mdash;
+        cafes, restaurants, and hidden corners across the city.
+      </p>
+    </div>
+  </header>
+
+  <!-- Places -->
+  <div class="container">
+    <div class="section">
+
+      <!-- Filters -->
+      <div class="filter-bar">
+        <div class="filter-group">
+          <span class="filter-group-label">Category</span>
+          <button class="filter-btn active" data-filter="category" data-value="all">All</button>
+          <button class="filter-btn" data-filter="category" data-value="cafe">Cafe</button>
+          <button class="filter-btn" data-filter="category" data-value="ramen">Ramen</button>
+          <button class="filter-btn" data-filter="category" data-value="sushi">Sushi</button>
+          <button class="filter-btn" data-filter="category" data-value="tonkatsu">Tonkatsu</button>
+          <button class="filter-btn" data-filter="category" data-value="izakaya">Izakaya</button>
+          <button class="filter-btn" data-filter="category" data-value="italian">Italian</button>
+          <button class="filter-btn" data-filter="category" data-value="foreign">Foreign</button>
+        </div>
+        <div class="filter-divider"></div>
+        <div class="filter-group">
+          <span class="filter-group-label">Area</span>
+          <button class="filter-btn active" data-filter="neighborhood" data-value="all">All</button>
+          <button class="filter-btn" data-filter="neighborhood" data-value="koenji">Koenji</button>
+          <button class="filter-btn" data-filter="neighborhood" data-value="okubo">Okubo</button>
+          <button class="filter-btn" data-filter="neighborhood" data-value="meguro">Meguro</button>
+          <button class="filter-btn" data-filter="neighborhood" data-value="shinjuku">Shinjuku</button>
+          <button class="filter-btn" data-filter="neighborhood" data-value="ebisu">Ebisu</button>
+        </div>
+      </div>
+
+      <!-- Card Grid -->
+      <div class="card-grid" id="placeGrid">
+
+        <!-- Ramen Yama-to-ki -->
+        <article class="card" data-category="ramen" data-neighborhood="koenji">
+          <div class="card-meta">
+            <span class="tag">Ramen</span>
+            <span class="tag tag--neighborhood">Koenji</span>
+          </div>
+          <div class="card-header">
+            <h3><a href="ramen-yama-to-ki.html">Ramen Yama-to-ki</a></h3>
+          </div>
+          <p class="card-description">The best ramen I have ever had. I recommend the shoyu ramen. The ramen is light. It has been consistently good when I've gone. The location is a little bit out of the way and I have had to line up for up to thirty minutes.</p>
+          <div class="card-footer">
+            <span class="card-price">avg. <strong>&yen;1,200</strong></span>
+            <div class="rating">
+              <span class="rating-star filled">★</span>
+              <span class="rating-star filled">★</span>
+              <span class="rating-star filled">★</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- Tonkatsu Taiho -->
+        <article class="card" data-category="tonkatsu" data-neighborhood="meguro">
+          <div class="card-meta">
+            <span class="tag">Tonkatsu</span>
+            <span class="tag tag--neighborhood">Meguro</span>
+          </div>
+          <div class="card-header">
+            <h3><a href="tonkatsu-taiho.html">Tonkatsu Taiho</a></h3>
+          </div>
+          <p class="card-description">Extremely good tonkatsu that is absurdly good for the price. I recommend the hire-katsu, then the tonkatsu. I don't recommend it exactly but the takeout is also great here. Also, it's better when the lady is cooking.</p>
+          <div class="card-footer">
+            <span class="card-price">avg. <strong>&yen;1,800</strong></span>
+            <div class="rating">
+              <span class="rating-star filled">★</span>
+              <span class="rating-star filled">★</span>
+              <span class="rating-star">★</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- Shunou Hantai -->
+        <article class="card" data-category="izakaya" data-neighborhood="meguro">
+          <div class="card-meta">
+            <span class="tag">Izakaya</span>
+            <span class="tag tag--neighborhood">Meguro</span>
+          </div>
+          <div class="card-header">
+            <h3><a href="shunou-hantai.html">Shunou Hantai</a></h3>
+          </div>
+          <p class="card-description">Tasteful and tastefully prepared unique dishes. The chef is a bit odd and the menu is hand-written so it may be difficult to order without knowing japanese.</p>
+          <div class="card-footer">
+            <span class="card-price">avg. <strong>&yen;5,000</strong></span>
+            <div class="rating">
+              <span class="rating-star filled">★</span>
+              <span class="rating-star filled">★</span>
+              <span class="rating-star">★</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- Kaori-za -->
+        <article class="card" data-category="cafe" data-neighborhood="okubo">
+          <div class="card-meta">
+            <span class="tag">Cafe</span>
+            <span class="tag tag--neighborhood">Okubo</span>
+          </div>
+          <div class="card-header">
+            <h3><a href="kaori-za.html">Kaori-za</a></h3>
+          </div>
+          <p class="card-description">A cafe which happens to be the charmingly bizarre basement living room of the owner.</p>
+          <div class="card-footer">
+            <span class="card-price">avg. <strong>&yen;1,200</strong></span>
+            <div class="rating">
+              <span class="rating-star filled">★</span>
+              <span class="rating-star">★</span>
+              <span class="rating-star">★</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- Yurakucho Kakida -->
+        <article class="card" data-category="sushi" data-neighborhood="shinjuku">
+          <div class="card-meta">
+            <span class="tag">Sushi</span>
+            <span class="tag tag--neighborhood">Shinjuku</span>
+          </div>
+          <div class="card-header">
+            <h3><a href="yurakucho-kakida.html">Yurakucho Kakida</a></h3>
+          </div>
+          <p class="card-description">All-you-can-eat sushi with high quality raw ingredients at a reasonable price.</p>
+          <div class="card-footer">
+            <span class="card-price">avg. <strong>&yen;15,000</strong></span>
+            <div class="rating">
+              <span class="rating-star filled">★</span>
+              <span class="rating-star">★</span>
+              <span class="rating-star">★</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- Thai Isaan -->
+        <article class="card" data-category="foreign" data-neighborhood="ebisu">
+          <div class="card-meta">
+            <span class="tag">Foreign</span>
+            <span class="tag tag--neighborhood">Ebisu</span>
+          </div>
+          <div class="card-header">
+            <h3><a href="thai-isaan.html">Thai Isaan</a></h3>
+          </div>
+          <p class="card-description">Nice, fairly casual thai place. I recommend the pad see ew.</p>
+          <div class="card-footer">
+            <span class="card-price">avg. <strong>&yen;1,500</strong></span>
+            <div class="rating">
+              <span class="rating-star filled">★</span>
+              <span class="rating-star">★</span>
+              <span class="rating-star">★</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- Efelif Kebab -->
+        <article class="card" data-category="foreign" data-neighborhood="okubo">
+          <div class="card-meta">
+            <span class="tag">Foreign</span>
+            <span class="tag tag--neighborhood">Okubo</span>
+          </div>
+          <div class="card-header">
+            <h3><a href="efelif-kebab.html">Efelif Kebab</a></h3>
+          </div>
+          <p class="card-description">Good kebab food cart with dishes packed with lots of food and a sociable chef.</p>
+          <div class="card-footer">
+            <span class="card-price">avg. <strong>&yen;1,000</strong></span>
+            <div class="rating">
+              <span class="rating-star filled">★</span>
+              <span class="rating-star">★</span>
+              <span class="rating-star">★</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- Del Sol -->
+        <article class="card" data-category="italian" data-neighborhood="koenji">
+          <div class="card-meta">
+            <span class="tag">Italian</span>
+            <span class="tag tag--neighborhood">Koenji</span>
+          </div>
+          <div class="card-header">
+            <h3><a href="del-sol.html">Del Sol</a></h3>
+          </div>
+          <p class="card-description">Solid italian food at a reasonable price.</p>
+          <div class="card-footer">
+            <span class="card-price">avg. <strong>&yen;1,200</strong></span>
+            <div class="rating">
+              <span class="rating-star filled">★</span>
+              <span class="rating-star">★</span>
+              <span class="rating-star">★</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- Vietnam Chan -->
+        <article class="card" data-category="foreign" data-neighborhood="okubo">
+          <div class="card-meta">
+            <span class="tag">Foreign</span>
+            <span class="tag tag--neighborhood">Okubo</span>
+          </div>
+          <div class="card-header">
+            <h3><a href="vietnam-chan.html">Vietnam Chan</a></h3>
+          </div>
+          <p class="card-description">Very good vietnamese food. I especially recommend the lunchtime pho.</p>
+          <div class="card-footer">
+            <span class="card-price">avg. <strong>&yen;1,500</strong></span>
+            <div class="rating">
+              <span class="rating-star filled">★</span>
+              <span class="rating-star">★</span>
+              <span class="rating-star">★</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- R-za Dokushokan -->
+        <article class="card" data-category="cafe" data-neighborhood="koenji">
+          <div class="card-meta">
+            <span class="tag">Cafe</span>
+            <span class="tag tag--neighborhood">Koenji</span>
+          </div>
+          <div class="card-header">
+            <h3><a href="r-za-dokushokan.html">R-za Dokushokan</a></h3>
+          </div>
+          <p class="card-description">Interesting cafe environment filled with plants and books. Great for quietly reading.</p>
+          <div class="card-footer">
+            <span class="card-price">avg. <strong>&yen;700</strong></span>
+            <div class="rating">
+              <span class="rating-star filled">★</span>
+              <span class="rating-star">★</span>
+              <span class="rating-star">★</span>
+            </div>
+          </div>
+        </article>
+
+      </div>
+
+      <p id="noResults" style="display:none; text-align:center; color:var(--color-text-muted); padding: var(--space-lg) 0;">
+        No places match the selected filters.
+      </p>
+
+    </div>
+  </div>
+
+  <!-- Map -->
+  <section class="map-section">
+    <div class="map-section-header container">
+      <p class="section-label">On the map</p>
+      <h2>Where to find them</h2>
+    </div>
+    <div id="tokyo-map"></div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <p>Tokyo Guide &mdash; A personal collection of recommendations.</p>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('navToggle').addEventListener('click', function() {
+      document.getElementById('navLinks').classList.toggle('open');
+    });
+
+    const state = { category: 'all', neighborhood: 'all' };
+    const cards = document.querySelectorAll('.card');
+    const noResults = document.getElementById('noResults');
+
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        const filterType = this.dataset.filter;
+        this.closest('.filter-group')
+            .querySelectorAll('.filter-btn')
+            .forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        state[filterType] = this.dataset.value;
+        applyFilters();
+      });
+    });
+
+    function applyFilters() {
+      let visible = 0;
+      cards.forEach(card => {
+        const catMatch = state.category === 'all' || card.dataset.category === state.category;
+        const hoodMatch = state.neighborhood === 'all' || card.dataset.neighborhood === state.neighborhood;
+        const show = catMatch && hoodMatch;
+        card.style.display = show ? '' : 'none';
+        if (show) visible++;
+      });
+      noResults.style.display = visible === 0 ? '' : 'none';
+    }
+  </script>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script>
+    const map = L.map('tokyo-map', {
+      center: [35.668, 139.700],
+      zoom: 12,
+      scrollWheelZoom: false,
+      zoomControl: true
+    });
+
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
+      subdomains: 'abcd',
+      maxZoom: 19
+    }).addTo(map);
+
+    const markerIcon = L.divIcon({
+      className: 'map-marker',
+      html: '<div class="marker-pin"></div>',
+      iconSize: [16, 16],
+      iconAnchor: [8, 8],
+      popupAnchor: [0, -12]
+    });
+
+    const places = [
+      { name: 'Kaori-za',          url: 'kaori-za.html',          lat: 35.6998, lng: 139.6990, cat: 'Cafe',     hood: 'Okubo' },
+      { name: 'Yurakucho Kakida',  url: 'yurakucho-kakida.html',  lat: 35.6895, lng: 139.7010, cat: 'Sushi',    hood: 'Shinjuku' },
+      { name: 'Thai Isaan',        url: 'thai-isaan.html',        lat: 35.6479, lng: 139.7100, cat: 'Foreign',  hood: 'Ebisu' },
+      { name: 'Efelif Kebab',      url: 'efelif-kebab.html',      lat: 35.7015, lng: 139.7008, cat: 'Foreign',  hood: 'Okubo' },
+      { name: 'Tonkatsu Taiho',    url: 'tonkatsu-taiho.html',    lat: 35.6318, lng: 139.7145, cat: 'Tonkatsu', hood: 'Meguro' },
+      { name: 'Shunou Hantai',     url: 'shunou-hantai.html',     lat: 35.6335, lng: 139.7170, cat: 'Izakaya',  hood: 'Meguro' },
+      { name: 'Del Sol',           url: 'del-sol.html',           lat: 35.7055, lng: 139.6490, cat: 'Italian',  hood: 'Koenji' },
+      { name: 'Vietnam Chan',      url: 'vietnam-chan.html',       lat: 35.7005, lng: 139.7016, cat: 'Foreign',  hood: 'Okubo' },
+      { name: 'Ramen Yama-to-ki',  url: 'ramen-yama-to-ki.html',  lat: 35.7080, lng: 139.6480, cat: 'Ramen',   hood: 'Koenji' },
+      { name: 'R-za Dokushokan',   url: 'r-za-dokushokan.html',   lat: 35.7040, lng: 139.6505, cat: 'Cafe',    hood: 'Koenji' },
+    ];
+
+    places.forEach(p => {
+      const popup = L.popup({ closeButton: false, className: 'map-popup-wrapper' }).setContent(
+        `<div class="map-popup">
+          <a href="${p.url}" class="map-popup-name">${p.name}</a>
+          <span class="map-popup-meta">${p.cat} &middot; ${p.hood}</span>
+        </div>`
+      );
+      L.marker([p.lat, p.lng], { icon: markerIcon }).addTo(map).bindPopup(popup);
+    });
+  </script>
+
+</body>
+</html>
